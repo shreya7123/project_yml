@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: interviewer-service
+  name: interviewer-service
+spec:
+  ports:
+  - port: 8097
+    protocol: TCP
+    targetPort: 8097
+  selector:
+    app: interviewer-service
+  type: ClusterIP
+...
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: interviewer-service
+  labels:
+    app: interviewer-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: interviewer-service
+  template:
+    metadata:
+      labels:
+        app: interviewer-service
+    spec:
+      containers:
+      - name: interviewer-service
+        image: shreya7123/bookmyslot:book-slot_interviewer-service
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8097
+        env:
+        - name: servername_eureka
+          value: "eureka-server"
+...
+Footer
